@@ -7,53 +7,52 @@
 	let price = 0;
 	let description = '';
 
-	let books =[];
-	let purchases = [];
+	let stock = [];
+	let cart = [];
 
-	function setTitle(event){
+	function setTitle(event) {
 		title = event.target.value;
 	}
 
-	function addBook(){
+	function addBook() {
 		const newBook = {
-			title : title,
-			price : price,
+			title: title,
+			price: price,
 			description: description
-
 		};
-		books = books.concat(newBook)
+		stock = [...stock, newBook];
 		title = '';
-    	price = 0;
-    	description = '';	
+		price = 0;
+		description = '';
 	}
 
-	function purchaseBook(event){
-		const selectedTitle= event.detail;
-		purchases = purchases.concat({
-			...books.find(book => book.title === selectedTitle)
-		});
+	function purchaseBook(title) {
+		const purchasedBook = stock.find(book => book.title === title);
+		cart = [...cart, purchasedBook];
 	}
 
-	function removeBook(title) {
-    books = books.filter(book => book.title !== title);
+	function removeFromStock(title) {
+		stock = stock.filter(book => book.title !== title);
+		cart = cart.filter(book => book.title !== title);
 	}
-
-
 </script>
 
 <style>
 	h1 {
 		color: purple;
-		text-align:center;
-
+		text-align: center;
 	}
 
-	section{
+	section {
 		margin: 1rem auto;
 		width: 30rem;
 	}
 
-	label,input,textarea{width: 100%}
+	label,
+	input,
+	textarea {
+		width: 100%;
+	}
 </style>
 
 <h1>Book Store</h1>
@@ -62,42 +61,42 @@
 	<h2>Add New Book</h2>
 	<div>
 		<label for="title">Title</label>
-		<input type="text" id="title" value={title} on:input={setTitle}/>
+		<input type="text" id="title" value={title} on:input={setTitle} />
 	</div>
 
 	<div>
 		<label for="price"> Price</label>
-		<input type="number" id="price"  bind:value={price}/>
+		<input type="number" id="price" bind:value={price} />
 	</div>
 
 	<div>
 		<label for="description">Description</label>
-		<textarea rows="3" id="description" bind:value={description}/>
+		<textarea rows="3" id="description" bind:value={description} />
 	</div>
 
 	<Button on:click={addBook}>ADD Book</Button>
-
 </section>
 
 <section>
 	<h2>Stock</h2>
-	{#if books.length === 0}
-		<p>
-			No books in stock.
-		</p>
+	{#if stock.length === 0}
+		<p>No books in stock.</p>
 	{:else}
-		{#each books as book}
-			<Book bookTitle={book.title}
+		{#each stock as book}
+			<Book
+				bookTitle={book.title}
 				bookPrice={book.price}
 				bookDescription={book.description}
-				on:buy={purchaseBook}
-				onDelete={removeBook}
+				on:buy={() => purchaseBook(book.title)}
+				on:delete={() => removeFromStock(book.title)}
 			/>
-	{/each}
-{/if}
+		{/each}
+	{/if}
 </section>
 
 <section>
-	<Purchase books ={purchases}  />
+	<Purchase
+		books={cart}
+		onDelete={removeFromStock}
+	/>
 </section>
-
