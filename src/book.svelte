@@ -4,6 +4,7 @@
     export let bookTitle;
     export let bookPrice;
     export let bookDescription;
+    export let onDelete;
   
     const dispatch = createEventDispatcher();
   
@@ -18,6 +19,7 @@
     <h2>{bookPrice}</h2>
     <p>{bookDescription}</p>
     <Button on:click={purchaseBook}>Buy</Button>
+    <Button on:click={() => onDelete(bookTitle)}>Delete</Button>
   </div>
   
   <style>

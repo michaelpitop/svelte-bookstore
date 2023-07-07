@@ -22,6 +22,9 @@
 
 		};
 		books = books.concat(newBook)
+		title = '';
+    	price = 0;
+    	description = '';	
 	}
 
 	function purchaseBook(event){
@@ -30,6 +33,11 @@
 			...books.find(book => book.title === selectedTitle)
 		});
 	}
+
+	function removeBook(title) {
+    books = books.filter(book => book.title !== title);
+	}
+
 
 </script>
 
@@ -78,12 +86,13 @@
 			No books in stock.
 		</p>
 	{:else}
-	{#each books as book}
-		<Book bookTitle={book.title}
-		bookPrice={book.price}
-		bookDescription={book.description}
-		on:buy={purchaseBook}
-		/>
+		{#each books as book}
+			<Book bookTitle={book.title}
+				bookPrice={book.price}
+				bookDescription={book.description}
+				on:buy={purchaseBook}
+				onDelete={removeBook}
+			/>
 	{/each}
 {/if}
 </section>
